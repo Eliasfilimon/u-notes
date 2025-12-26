@@ -1,0 +1,29 @@
+{% extends 'notes/base.html' %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+    <h2 class="text-4xl font-bold text-gray-800">Topics</h2>
+    <a href="{% url 'topic_create' %}" class="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition-colors">
+        <i class="fas fa-plus mr-2"></i>New Topic
+    </a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for topic in topics %}
+    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+        <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ topic.name }}</h3>
+        <p class="text-gray-600">{{ topic.course }}</p>
+        <div class="mt-6 flex justify-between items-center">
+            <a href="{% url 'notes_by_topic' topic.pk %}" class="text-green-500 hover:text-green-700 font-semibold">View Notes</a>
+            <div>
+                <a href="{% url 'topic_update' topic.pk %}" class="text-blue-500 hover:text-blue-700 mr-4"><i class="fas fa-edit"></i></a>
+                <a href="{% url 'topic_delete' topic.pk %}" class="text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-full text-center py-12">
+        <p class="text-gray-500 text-lg">No topics found. Add a new topic to get started.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

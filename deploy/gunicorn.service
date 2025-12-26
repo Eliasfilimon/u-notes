@@ -1,0 +1,25 @@
+# /etc/systemd/system/gunicorn.service
+# Sample systemd unit for running Django with Gunicorn
+# Adjust User, WorkingDirectory, Environment, and ExecStart to your setup
+
+[Unit]
+Description=Gunicorn daemon for U-Notes Django app
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/unotes/app
+Environment="DJANGO_DEBUG=False"
+Environment="DJANGO_ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com"
+Environment="DJANGO_CSRF_TRUSTED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com"
+EnvironmentFile=-/var/www/unotes/env
+ExecStart=/usr/bin/gunicorn unotes_project.wsgi:application \
+          --bind 127.0.0.1:8000 \
+          --workers 3 \
+          --timeout 120
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

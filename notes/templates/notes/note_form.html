@@ -1,0 +1,33 @@
+{% extends 'notes/base.html' %}
+
+{% block content %}
+<div class="bg-white dark:bg-gray-800 p-10 rounded-xl shadow-lg w-full max-w-2xl mx-auto">
+    <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-200 mb-8">{% if form.instance.pk %}Edit Note{% else %}Create a New Note{% endif %}</h2>
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        <div>
+            <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
+            {{ form.title }}
+        </div>
+        <div>
+            <label for="{{ form.topic.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Topic</label>
+            {{ form.topic }}
+        </div>
+        <div>
+            <label for="{{ form.content.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Content</label>
+            {{ form.media }}
+            {{ form.content }}
+        </div>
+        <div>
+            <label for="{{ form.tags.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tags</label>
+            {{ form.tags }}
+        </div>
+        <div class="flex justify-end">
+            <a href="{% url 'note_list' %}" class="text-gray-600 dark:text-gray-400 mr-4">Cancel</a>
+            <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition-colors">
+                <i class="fas fa-save mr-2"></i>Save
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

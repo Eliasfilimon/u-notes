@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: u-notes
+    runtime: python
+    pythonVersion: 3.13
+    buildCommand: "pipenv install --system --deploy && python manage.py migrate && python manage.py collectstatic --noinput"
+    startCommand: "gunicorn unotes_project.wsgi:application --bind 0.0.0.0:$PORT --workers 3 --timeout 120"
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "u-notes.onrender.com"  # TODO: replace with your Render service URL
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: "https://u-notes.onrender.com"  # TODO: replace with your domain
+      - key: DJANGO_SECURE_SSL_REDIRECT
+        value: "True"
+      - key: DJANGO_SQLITE_PATH
+        value: "/var/data/db.sqlite3"
+      - key: DJANGO_MEDIA_ROOT
+        value: "/var/data/media"
+    disk:
+      - name: data
+        mountPath: /var/data
+        sizeGB: 10  # Adjust as needed for uploads

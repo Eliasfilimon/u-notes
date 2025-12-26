@@ -1,0 +1,239 @@
+{% extends 'notes/base.html' %}
+
+{% block content %}
+<div class="bg-white dark:bg-gray-900">
+    <!-- Hero Section -->
+    <div class="relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 opacity-95"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+            <div class="text-center">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 leading-tight">
+                    Welcome to <span class="text-blue-200">U-Notes</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">
+                    The ultimate note-taking platform for <span class="font-bold text-white">Tanzanian university</span> students. Organize, search, and access your study materials anytime, anywhere.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <a href="{% url 'signup' %}" class="bg-white text-blue-700 px-8 py-4 rounded-lg shadow-xl hover:shadow-2xl hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 text-lg font-bold flex items-center">
+                        <i class="fas fa-rocket mr-2"></i>
+                        Get Started Free
+                    </a>
+                    <a href="{% url 'login' %}" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-blue-700 transition-all duration-300 text-lg font-semibold flex items-center">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Sign In
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Wave decoration -->
+        <div class="absolute bottom-0 left-0 right-0">
+            <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
+                <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" class="fill-white dark:fill-gray-900"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="py-16 bg-white dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="p-6">
+                    <div class="text-5xl font-extrabold text-blue-600 dark:text-blue-400 mb-2">10K+</div>
+                    <div class="text-gray-600 dark:text-gray-400 text-lg">Active Students</div>
+                </div>
+                <div class="p-6">
+                    <div class="text-5xl font-extrabold text-blue-600 dark:text-blue-400 mb-2">50K+</div>
+                    <div class="text-gray-600 dark:text-gray-400 text-lg">Notes Created</div>
+                </div>
+                <div class="p-6">
+                    <div class="text-5xl font-extrabold text-blue-600 dark:text-blue-400 mb-2">99.9%</div>
+                    <div class="text-gray-600 dark:text-gray-400 text-lg">Uptime</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="py-20 bg-gray-50 dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">Powerful Features for Smart Students</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Everything you need to succeed at university</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white mx-auto mb-6">
+                        <i class="fas fa-book-open text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3 text-center">Course Organization</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-center">Organize notes by course codes and topics. Perfect structure for any university curriculum.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 text-white mx-auto mb-6">
+                        <i class="fas fa-search text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3 text-center">Smart Search</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-center">Find any note instantly with powerful full-text search across all your content.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-br from-green-500 to-green-600 text-white mx-auto mb-6">
+                        <i class="fas fa-tags text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3 text-center">Tag System</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-center">Tag notes with keywords for quick filtering and exam preparation.</p>
+                </div>
+                <!-- Feature 4 -->
+                <div class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-br from-red-500 to-red-600 text-white mx-auto mb-6">
+                        <i class="fas fa-file-alt text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3 text-center">Rich Text Editor</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-center">Format your notes beautifully with our powerful rich text editor.</p>
+                </div>
+                <!-- Feature 5 -->
+                <div class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 text-white mx-auto mb-6">
+                        <i class="fas fa-upload text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3 text-center">Document Upload</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-center">Upload and organize past papers, lecture notes, and study materials.</p>
+                </div>
+                <!-- Feature 6 -->
+                <div class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-600 text-white mx-auto mb-6">
+                        <i class="fas fa-moon text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3 text-center">Dark Mode</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-center">Study comfortably at any time with our eye-friendly dark mode.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonial Section -->
+    <div class="py-20 bg-white dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">Loved by Students Across Tanzania</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400">See what students are saying about U-Notes</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-xl shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 text-xl">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 dark:text-gray-300 mb-4 italic">"U-Notes has completely transformed how I study. Everything is so organized and easy to find!"</p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-3">AS</div>
+                        <div>
+                            <div class="font-bold text-gray-900 dark:text-white">Amina Said</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Computer Science, Year 3</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-xl shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 text-xl">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 dark:text-gray-300 mb-4 italic">"The search feature is a lifesaver during exam season. I can find specific topics in seconds!"</p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-3">JM</div>
+                        <div>
+                            <div class="font-bold text-gray-900 dark:text-white">John Mwita</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Business Admin, Year 2</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-xl shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 text-xl">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 dark:text-gray-300 mb-4 italic">"Best note-taking app for university! The document upload feature is perfect for past papers."</p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-3">FK</div>
+                        <div>
+                            <div class="font-bold text-gray-900 dark:text-white">Fatma Khalfan</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Education, Year 4</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-700 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Ready to Transform Your Studies?</h2>
+            <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">Join thousands of Tanzanian students who are already taking better notes and achieving better grades.</p>
+            <a href="{% url 'signup' %}" class="inline-block bg-white text-blue-700 px-10 py-4 rounded-lg shadow-2xl hover:shadow-3xl hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 text-xl font-bold">
+                <i class="fas fa-graduation-cap mr-2"></i>
+                Start Your Journey Today
+            </a>
+            <p class="text-blue-100 mt-6 text-sm">Free forever • No credit card required • Get started in 30 seconds</p>
+        </div>
+        <!-- Decorative elements -->
+        <div class="absolute top-0 left-0 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+        <div class="absolute bottom-0 right-0 w-64 h-64 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gray-900 text-gray-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-white font-bold text-xl mb-4">U-Notes</h3>
+                    <p class="text-sm">Empowering Tanzanian students to take better notes and achieve academic excellence.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="{% url 'signup' %}" class="hover:text-white transition-colors">Sign Up</a></li>
+                        <li><a href="{% url 'login' %}" class="hover:text-white transition-colors">Login</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Connect With Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook text-2xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter text-2xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram text-2xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
+                <p>&copy; 2025 U-Notes. Developed by <span class="text-blue-400 font-semibold">elly23</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

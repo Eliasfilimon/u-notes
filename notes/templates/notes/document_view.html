@@ -1,0 +1,109 @@
+{% extends 'notes/base.html' %}
+
+{% block content %}
+<div class="mb-6">
+    <nav class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+        <a href="{% url 'document_list' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            <i class="fas fa-arrow-left mr-1"></i>My Documents
+        </a>
+        <span class="mx-2">/</span>
+        <span class="text-gray-500">{{ document.title }}</span>
+    </nav>
+</div>
+
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
+        <h1 class="text-3xl font-bold text-white mb-2">{{ document.title }}</h1>
+        <div class="flex items-center text-blue-100 text-sm space-x-4">
+            <span><i class="fas fa-folder mr-2"></i>{{ document.topic.course.name }}</span>
+            <span><i class="fas fa-bookmark mr-2"></i>{{ document.topic.name }}</span>
+            <span><i class="fas fa-calendar mr-2"></i>{{ document.uploaded_at|date:"F j, Y" }}</span>
+        </div>
+    </div>
+
+    <!-- Viewer -->
+    <div class="p-8">
+        {% if file_type == 'image' %}
+            <!-- Image Viewer -->
+            <div class="flex justify-center bg-gray-100 dark:bg-gray-900 rounded-lg p-4">
+                <img src="{{ document.file.url }}" alt="{{ document.title }}" class="max-w-full h-auto rounded-lg shadow-lg">
+            </div>
+        
+        {% elif file_type == 'pdf' %}
+            <!-- PDF Viewer -->
+            <div class="bg-gray-100 dark:bg-gray-900 rounded-lg p-4">
+                <object data="{{ document.file.url }}" type="application/pdf" class="w-full h-screen rounded-lg shadow-lg">
+                    <embed src="{{ document.file.url }}" type="application/pdf" class="w-full h-screen rounded-lg shadow-lg" />
+                    <div class="text-center py-12">
+                        <div class="w-24 h-24 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-file-pdf text-5xl text-red-600 dark:text-red-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">PDF Preview Not Available</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-6">Your browser doesn't support embedded PDFs.</p>
+                        <a href="{{ document.file.url }}" target="_blank" class="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors mr-2">
+                            <i class="fas fa-external-link-alt mr-2"></i>Open in New Tab
+                        </a>
+                        <a href="{{ document.file.url }}" download class="inline-block bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors">
+                            <i class="fas fa-download mr-2"></i>Download PDF
+                        </a>
+                    </div>
+                </object>
+            </div>
+            <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg flex items-center justify-between">
+                <p class="text-sm text-blue-800 dark:text-blue-200">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    Having trouble viewing? Try opening in a new tab or downloading the PDF.
+                </p>
+                <a href="{{ document.file.url }}" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
+                    <i class="fas fa-external-link-alt mr-2"></i>Open in New Tab
+                </a>
+            </div>
+        
+        {% elif file_type == 'text' %}
+            <!-- Text File Viewer -->
+            <div class="bg-gray-100 dark:bg-gray-900 rounded-lg p-6">
+                <pre class="text-sm text-gray-800 dark:text-gray-200 overflow-x-auto whitespace-pre-wrap font-mono">Loading file content...</pre>
+            </div>
+            <script>
+                fetch('{{ document.file.url }}')
+                    .then(response => response.text())
+                    .then(text => {
+                        document.querySelector('pre').textContent = text;
+                    })
+                    .catch(error => {
+                        document.querySelector('pre').textContent = 'Error loading file. Please download to view.';
+                    });
+            </script>
+        
+        {% else %}
+            <!-- Generic File Preview -->
+            <div class="text-center py-12">
+                <div class="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-file text-5xl text-gray-400 dark:text-gray-500"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">Preview Not Available</h3>
+                <p class="text-gray-600 dark:text-gray-400 mb-6">This file type (.{{ file_extension|upper }}) cannot be previewed in the browser.</p>
+                <a href="{{ document.file.url }}" download class="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors">
+                    <i class="fas fa-download mr-2"></i>Download File
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Actions -->
+    <div class="bg-gray-50 dark:bg-gray-900 px-8 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
+        <a href="{% url 'document_list' %}" class="bg-gray-500 dark:bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-600 dark:hover:bg-gray-700 transition-colors">
+            <i class="fas fa-arrow-left mr-2"></i>Back to Documents
+        </a>
+        <div class="space-x-2">
+            <a href="{{ document.file.url }}" download class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors inline-block">
+                <i class="fas fa-download mr-2"></i>Download
+            </a>
+            <a href="{% url 'document_delete' document.pk %}" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors inline-block">
+                <i class="fas fa-trash-alt mr-2"></i>Delete
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Environments
+.env
+env/
+venv/
+.venv/
+
+# Pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Django
+*.log
+db.sqlite3
+media/
+staticfiles/
+
+# Node (if any)
+node_modules/
+
+# VS Code
+.vscode/
+
+# Mac/Linux misc
+.DS_Store

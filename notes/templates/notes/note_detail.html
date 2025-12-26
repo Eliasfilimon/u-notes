@@ -1,0 +1,45 @@
+{% extends 'notes/base.html' %}
+
+{% block content %}
+<div class="mb-6">
+    <nav class="flex items-center text-sm text-gray-600 dark:text-gray-400 space-x-2">
+        <a href="{% url 'note_list' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            <i class="fas fa-arrow-left mr-1"></i>My Notes
+        </a>
+        <span>/</span>
+        <a href="{% url 'notes_by_course' note.topic.course.pk %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            {{ note.topic.course.name }}
+        </a>
+        <span>/</span>
+        <a href="{% url 'notes_by_topic' note.topic.pk %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            {{ note.topic.name }}
+        </a>
+        <span>/</span>
+        <span class="text-gray-500">{{ note.title|truncatewords:5 }}</span>
+    </nav>
+</div>
+<div class="bg-white dark:bg-gray-800 p-10 rounded-xl shadow-lg w-full max-w-4xl mx-auto">
+    <h2 class="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-4">{{ note.title }}</h2>
+    <div class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+        <span>Course: {{ note.topic.course.name }}</span> |
+        <span>Topic: {{ note.topic.name }}</span> |
+        <span>Last updated: {{ note.updated_at|date:"F j, Y" }}</span>
+    </div>
+    <div class="mb-4">
+        {% for tag in note.tags.all %}
+            <a href="{% url 'notes_by_tag' tag.slug %}" class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">{{ tag.name }}</a>
+        {% endfor %}
+    </div>
+    <div class="prose max-w-none dark:prose-invert">
+        {{ note.content|safe }}
+    </div>
+    <div class="mt-8 flex justify-between items-center">
+        <a href="{% url 'note_list' %}" class="bg-gray-500 dark:bg-gray-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-gray-600 dark:hover:bg-gray-700 transition-colors">
+            <i class="fas fa-arrow-left mr-2"></i>Back
+        </a>
+        <a href="{% url 'note_update' note.pk %}" class="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition-colors">
+            <i class="fas fa-edit mr-2"></i>Edit Note
+        </a>
+    </div>
+</div>
+{% endblock %}

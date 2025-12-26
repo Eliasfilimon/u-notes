@@ -1,0 +1,28 @@
+{% extends 'notes/base.html' %}
+
+{% block content %}
+<div class="bg-white p-10 rounded-xl shadow-lg w-full max-w-2xl mx-auto">
+    <h2 class="text-3xl font-bold text-gray-800 mb-8">{% if form.instance.pk %}Edit Course{% else %}Create a New Course{% endif %}</h2>
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        <div>
+            <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">Course Name</label>
+            {{ form.name }}
+        </div>
+        <div>
+            <label for="{{ form.course_code.id_for_label }}" class="block text-sm font-medium text-gray-700">Course Code</label>
+            {{ form.course_code }}
+        </div>
+        <div>
+            <label for="{{ form.instructor.id_for_label }}" class="block text-sm font-medium text-gray-700">Instructor</label>
+            {{ form.instructor }}
+        </div>
+        <div class="flex justify-end">
+            <a href="{% url 'course_list' %}" class="text-gray-600 mr-4">Cancel</a>
+            <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition-colors">
+                <i class="fas fa-save mr-2"></i>Save
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
