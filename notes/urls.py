@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import CustomPasswordResetView, CustomPasswordResetConfirmView
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -38,4 +39,6 @@ urlpatterns = [
     path('documents/upload/', views.document_upload, name='document_upload'),
     path('documents/<int:pk>/', views.document_view, name='document_view'),
     path('documents/<int:pk>/delete/', views.document_delete, name='document_delete'),
+    path('password_reset/', CustomPasswordResetView.as_view(), name='password_reset'),
+    path('reset/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 ]

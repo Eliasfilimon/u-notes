@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Count, Sum, Q
 from django.utils import timezone
@@ -21,6 +22,15 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.units import inch
 import markdown
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'notes/password_reset.html'
+    email_template_name = 'notes/password_reset_email.html'
+    success_url = '/password_reset/done/'
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'notes/password_reset_confirm.html'
+    success_url = '/password_reset/complete/'
 
 def home(request):
     if request.user.is_authenticated:
