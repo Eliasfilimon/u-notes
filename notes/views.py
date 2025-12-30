@@ -14,7 +14,7 @@ from .forms import NoteForm, CourseForm, TopicForm, UserUpdateForm, DocumentForm
 from django.db import models
 from django.conf import settings
 from django.contrib import messages
-import google.generativeai as genai
+from google import genai
 import re
 from bs4 import BeautifulSoup
 from reportlab.lib.pagesizes import letter
@@ -274,15 +274,17 @@ def use_gemini_summarization(content):
         if not settings.GEMINI_API_KEY:
             return None
         
-        genai.configure(api_key=settings.GEMINI_API_KEY)
-        model = genai.GenerativeModel('gemini-pro')
+        client = genai.Client(api_key=settings.GEMINI_API_KEY)
         
         prompt = f"""Please summarize the following note content in 2-3 bullet points. 
 Be concise and highlight the main ideas:
 
 {content[:2000]}"""  # Limit to 2000 chars to stay within free tier limits
         
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=prompt
+        )
         return response.text
     except Exception as e:
         print(f"Gemini API Error: {str(e)}")
@@ -294,15 +296,17 @@ def use_gemini_flashcards(content):
         if not settings.GEMINI_API_KEY:
             return None
         
-        genai.configure(api_key=settings.GEMINI_API_KEY)
-        model = genai.GenerativeModel('gemini-pro')
+        client = genai.Client(api_key=settings.GEMINI_API_KEY)
         
         prompt = f"""Create 5 flashcard Q&A pairs from this content. 
 Return as JSON array with 'question' and 'answer' keys:
 
 {content[:2000]}"""
         
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=prompt
+        )
         try:
             # Extract JSON from response
             import json as json_module
