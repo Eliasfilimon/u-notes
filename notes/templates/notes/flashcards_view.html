@@ -1,0 +1,139 @@
+{% extends 'notes/base.html' %}
+
+{% block title %}Study Flashcards - {{ note.title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4 text-center">
+            <i class="fas fa-graduation-cap mr-2 text-green-600"></i>Study Mode
+        </h1>
+        
+        <div class="mb-6 text-center">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">{{ note.title }}</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+                <span id="card-counter">1</span> / {{ flashcards.count }}
+            </p>
+        </div>
+
+        {% if flashcards %}
+        <div id="flashcard-container" class="mb-6">
+            {% for flashcard in flashcards %}
+            <div class="flashcard {% if not forloop.first %}hidden{% endif %}" data-index="{{ forloop.counter }}">
+                <div class="card-flip-container" onclick="this.classList.toggle('flipped')">
+                    <div class="card-front bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-xl p-8 min-h-[300px] flex items-center justify-center cursor-pointer shadow-xl">
+                        <div class="text-center">
+                            <p class="text-sm font-semibold mb-4 opacity-90">
+                                <i class="fas fa-question-circle mr-2"></i>Question
+                            </p>
+                            <p class="text-xl font-medium">{{ flashcard.question }}</p>
+                            <p class="text-sm mt-6 opacity-75">
+                                <i class="fas fa-hand-pointer mr-2"></i>Click to reveal answer
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card-back bg-gradient-to-br from-green-500 to-teal-600 text-white rounded-xl p-8 min-h-[300px] flex items-center justify-center cursor-pointer shadow-xl hidden">
+                        <div class="text-center">
+                            <p class="text-sm font-semibold mb-4 opacity-90">
+                                <i class="fas fa-check-circle mr-2"></i>Answer
+                            </p>
+                            <p class="text-xl font-medium">{{ flashcard.answer }}</p>
+                            <p class="text-sm mt-6 opacity-75">
+                                <i class="fas fa-hand-pointer mr-2"></i>Click to see question
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="flex justify-between items-center">
+            <button id="prev-btn" onclick="previousCard()" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200 disabled:opacity-50" disabled>
+                <i class="fas fa-chevron-left mr-2"></i>Previous
+            </button>
+            
+            <button id="next-btn" onclick="nextCard()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200">
+                Next<i class="fas fa-chevron-right ml-2"></i>
+            </button>
+        </div>
+        {% else %}
+        <div class="text-center py-12">
+            <p class="text-gray-600 dark:text-gray-400 mb-4">No flashcards yet!</p>
+            <a href="{% url 'generate_flashcards' note.pk %}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 inline-block">
+                <i class="fas fa-plus mr-2"></i>Generate Flashcards
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="mt-6 text-center">
+            <a href="{% url 'note_detail' note.pk %}" class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Note
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.card-flip-container {
+    position: relative;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.card-flip-container.flipped .card-front {
+    display: none;
+}
+
+.card-flip-container.flipped .card-back {
+    display: flex;
+}
+</style>
+
+<script>
+let currentCard = 1;
+const totalCards = {{ flashcards.count }};
+
+function updateButtons() {
+    document.getElementById('prev-btn').disabled = currentCard === 1;
+    document.getElementById('next-btn').disabled = currentCard === totalCards;
+    document.getElementById('card-counter').textContent = currentCard;
+}
+
+function showCard(index) {
+    document.querySelectorAll('.flashcard').forEach((card, i) => {
+        card.classList.toggle('hidden', i + 1 !== index);
+    });
+    // Reset flip state
+    document.querySelectorAll('.card-flip-container').forEach(container => {
+        container.classList.remove('flipped');
+    });
+}
+
+function nextCard() {
+    if (currentCard < totalCards) {
+        currentCard++;
+        showCard(currentCard);
+        updateButtons();
+    }
+}
+
+function previousCard() {
+    if (currentCard > 1) {
+        currentCard--;
+        showCard(currentCard);
+        updateButtons();
+    }
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') nextCard();
+    if (e.key === 'ArrowLeft') previousCard();
+    if (e.key === ' ') {
+        e.preventDefault();
+        document.querySelector('.flashcard:not(.hidden) .card-flip-container').classList.toggle('flipped');
+    }
+});
+</script>
+{% endblock %}

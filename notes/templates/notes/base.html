@@ -47,6 +47,12 @@
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
                             <a href="{% url 'note_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">My Notes</a>
+                            <a href="{% url 'shared_notes_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
+                                <i class="fas fa-share-alt mr-1"></i>Shared
+                            </a>
+                            <a href="{% url 'analytics_dashboard' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
+                                <i class="fas fa-chart-line mr-1"></i>Analytics
+                            </a>
                             <a href="{% url 'document_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">Documents</a>
                             <a href="{% url 'course_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">Courses</a>
                             <a href="{% url 'topic_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">Topics</a>

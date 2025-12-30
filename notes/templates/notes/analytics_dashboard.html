@@ -1,0 +1,231 @@
+{% extends 'notes/base.html' %}
+
+{% block title %}Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            <i class="fas fa-chart-line mr-2 text-blue-600"></i>Analytics Dashboard
+        </h1>
+        <p class="text-gray-600 dark:text-gray-400">Track your learning progress and study habits</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-blue-100 text-sm mb-1">Total Notes</p>
+                    <p class="text-3xl font-bold">{{ total_notes }}</p>
+                </div>
+                <i class="fas fa-sticky-note text-4xl text-blue-200"></i>
+            </div>
+        </div>
+        
+        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-purple-100 text-sm mb-1">Courses</p>
+                    <p class="text-3xl font-bold">{{ total_courses }}</p>
+                </div>
+                <i class="fas fa-book text-4xl text-purple-200"></i>
+            </div>
+        </div>
+        
+        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-green-100 text-sm mb-1">Topics</p>
+                    <p class="text-3xl font-bold">{{ total_topics }}</p>
+                </div>
+                <i class="fas fa-bookmark text-4xl text-green-200"></i>
+            </div>
+        </div>
+        
+        <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-orange-100 text-sm mb-1">Flashcards</p>
+                    <p class="text-3xl font-bold">{{ total_flashcards }}</p>
+                </div>
+                <i class="fas fa-layer-group text-4xl text-orange-200"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Notes Created Chart -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                <i class="fas fa-chart-bar mr-2 text-blue-600"></i>Notes Created (Last 7 Days)
+            </h3>
+            <canvas id="notesChart"></canvas>
+        </div>
+        
+        <!-- Activity Types Chart -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                <i class="fas fa-chart-pie mr-2 text-purple-600"></i>Activity Distribution
+            </h3>
+            <canvas id="activityChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Active Courses & Recent Activity -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Most Active Courses -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                <i class="fas fa-fire mr-2 text-orange-600"></i>Most Active Courses
+            </h3>
+            {% if active_courses %}
+            <div class="space-y-3">
+                {% for course in active_courses %}
+                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div class="flex-1">
+                        <p class="font-semibold text-gray-800 dark:text-gray-200">{{ course.name }}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ course.course_code }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-2xl font-bold text-blue-600">{{ course.note_count }}</p>
+                        <p class="text-xs text-gray-500">notes</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500 dark:text-gray-400 text-center py-8">No courses yet</p>
+            {% endif %}
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                <i class="fas fa-history mr-2 text-green-600"></i>Recent Activity
+            </h3>
+            {% if recent_activities %}
+            <div class="space-y-3 max-h-96 overflow-y-auto">
+                {% for activity in recent_activities %}
+                <div class="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div class="flex-shrink-0">
+                        {% if activity.activity_type == 'create' %}
+                        <i class="fas fa-plus-circle text-green-600 text-xl"></i>
+                        {% elif activity.activity_type == 'edit' %}
+                        <i class="fas fa-edit text-blue-600 text-xl"></i>
+                        {% elif activity.activity_type == 'view' %}
+                        <i class="fas fa-eye text-purple-600 text-xl"></i>
+                        {% elif activity.activity_type == 'share' %}
+                        <i class="fas fa-share-alt text-orange-600 text-xl"></i>
+                        {% elif activity.activity_type == 'comment' %}
+                        <i class="fas fa-comment text-pink-600 text-xl"></i>
+                        {% endif %}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-800 dark:text-gray-200">
+                            {{ activity.get_activity_type_display }} 
+                            {% if activity.note %}
+                            <a href="{% url 'note_detail' activity.note.pk %}" class="text-blue-600 hover:underline">
+                                {{ activity.note.title|truncatewords:5 }}
+                            </a>
+                            {% endif %}
+                        </p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ activity.timestamp|timesince }} ago</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500 dark:text-gray-400 text-center py-8">No recent activity</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Stats Summary -->
+    <div class="mt-8 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg shadow-lg p-6 border border-indigo-200 dark:border-indigo-700">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
+            <i class="fas fa-trophy mr-2 text-yellow-600"></i>Your Progress
+        </h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div class="text-center">
+                <p class="text-3xl font-bold text-indigo-600">{{ notes_this_week }}</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Notes This Week</p>
+            </div>
+            <div class="text-center">
+                <p class="text-3xl font-bold text-purple-600">{{ notes_this_month }}</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Notes This Month</p>
+            </div>
+            <div class="text-center">
+                <p class="text-3xl font-bold text-pink-600">{{ total_study_time }}</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Minutes Studied</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Notes Created Chart
+const notesCtx = document.getElementById('notesChart').getContext('2d');
+new Chart(notesCtx, {
+    type: 'line',
+    data: {
+        labels: {{ daily_labels|safe }},
+        datasets: [{
+            label: 'Notes Created',
+            data: {{ daily_notes|safe }},
+            borderColor: 'rgb(59, 130, 246)',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            tension: 0.4,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                }
+            }
+        }
+    }
+});
+
+// Activity Types Chart
+const activityCtx = document.getElementById('activityChart').getContext('2d');
+new Chart(activityCtx, {
+    type: 'doughnut',
+    data: {
+        labels: {{ activity_labels|safe }},
+        datasets: [{
+            data: {{ activity_data|safe }},
+            backgroundColor: [
+                'rgb(59, 130, 246)',   // blue
+                'rgb(147, 51, 234)',   // purple
+                'rgb(34, 197, 94)',    // green
+                'rgb(251, 146, 60)',   // orange
+                'rgb(236, 72, 153)'    // pink
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

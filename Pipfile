@@ -9,6 +9,14 @@ gunicorn = "*"
 whitenoise = "*"
 django-ckeditor = "*"
 django-taggit = "*"
+openai = "*"
+reportlab = "*"
+markdown = "*"
+pydub = "*"
+speechrecognition = "*"
+django-cors-headers = "*"
+django-filter = "*"
+chartjs = "*"
 
 [dev-packages]
 

@@ -3,24 +3,36 @@ services:
     name: u-notes
     runtime: python
     pythonVersion: 3.12
-    buildCommand: "pipenv install --system --deploy && python manage.py migrate && python manage.py collectstatic --noinput"
-    startCommand: "gunicorn unotes_project.wsgi:application --bind 0.0.0.0:$PORT --workers 3 --timeout 120"
+    buildCommand: "pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput"
+    startCommand: "gunicorn unotes_project.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --worker-class sync --timeout 120 --access-logfile -"
     envVars:
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: DJANGO_DEBUG
         value: "False"
       - key: DJANGO_ALLOWED_HOSTS
-        value: "u-notes.onrender.com"  # TODO: replace with your Render service URL
+        value: "*"
       - key: DJANGO_CSRF_TRUSTED_ORIGINS
-        value: "https://u-notes.onrender.com"  # TODO: replace with your domain
+        value: "https://*.onrender.com,https://*.yourdomain.com"
       - key: DJANGO_SECURE_SSL_REDIRECT
         value: "True"
-      - key: DJANGO_SQLITE_PATH
-        value: "/var/data/db.sqlite3"
-      - key: DJANGO_MEDIA_ROOT
-        value: "/var/data/media"
+      - key: DJANGO_SESSION_COOKIE_SECURE
+        value: "True"
+      - key: DJANGO_CSRF_COOKIE_SECURE
+        value: "True"
+      - key: DJANGO_SECURE_HSTS_SECONDS
+        value: "31536000"
+      - key: DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS
+        value: "True"
+      - key: DJANGO_SECURE_HSTS_PRELOAD
+        value: "True"
+      - key: DJANGO_SECURE_CONTENT_TYPE_NOSNIFF
+        value: "True"
+      - key: DJANGO_SECURE_BROWSER_XSS_FILTER
+        value: "True"
+      - key: DJANGO_X_FRAME_OPTIONS
+        value: "DENY"
     disk:
       - name: data
         mountPath: /var/data
-        sizeGB: 10  # Adjust as needed for uploads
+        sizeGB: 10

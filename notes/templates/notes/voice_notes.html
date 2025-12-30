@@ -1,0 +1,234 @@
+{% extends 'notes/base.html' %}
+
+{% block title %}Voice Notes - {{ note.title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <i class="fas fa-microphone mr-2 text-red-600"></i>Voice Notes
+        </h1>
+        
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">{{ note.title }}</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+                <i class="fas fa-book mr-1"></i>{{ note.topic.course.name }} - {{ note.topic.name }}
+            </p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="{% if message.tags == 'error' %}bg-red-100 border-red-400 text-red-700{% else %}bg-green-100 border-green-400 text-green-700{% endif %} border px-4 py-3 rounded mb-4">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Record/Upload Section -->
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                <i class="fas fa-plus-circle mr-2"></i>Add Voice Note
+            </h3>
+            
+            <!-- Browser Recording -->
+            <div class="mb-6">
+                <div id="recording-controls" class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <button id="start-recording" onclick="startRecording()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-200">
+                            <i class="fas fa-circle mr-2"></i>Start Recording
+                        </button>
+                        <button id="stop-recording" onclick="stopRecording()" disabled class="bg-gray-400 text-white font-bold py-3 px-6 rounded-lg shadow-lg cursor-not-allowed" disabled>
+                            <i class="fas fa-stop mr-2"></i>Stop Recording
+                        </button>
+                        <span id="recording-time" class="text-gray-700 dark:text-gray-300 font-mono text-lg hidden">00:00</span>
+                    </div>
+                    
+                    <div id="audio-preview" class="hidden">
+                        <audio id="audio-player" controls class="w-full"></audio>
+                        <button id="upload-recording" onclick="uploadRecording()" class="mt-3 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
+                            <i class="fas fa-upload mr-2"></i>Upload Recording
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Or Upload File -->
+            <div class="border-t border-red-200 dark:border-red-700 pt-4">
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Or upload an audio file:</p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="flex items-center gap-4">
+                        <input type="file" name="audio_file" accept="audio/*" required
+                               class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200">
+                            <i class="fas fa-upload mr-2"></i>Upload
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Voice Notes List -->
+        <div>
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                <i class="fas fa-list mr-2"></i>Recorded Voice Notes ({{ voice_notes.count }})
+            </h3>
+            
+            {% if voice_notes %}
+            <div class="space-y-4">
+                {% for voice_note in voice_notes %}
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <i class="fas fa-clock mr-1"></i>{{ voice_note.created_at|date:"F j, Y, g:i a" }}
+                            </p>
+                            <audio controls class="w-full">
+                                <source src="{{ voice_note.audio_file.url }}" type="audio/webm">
+                                <source src="{{ voice_note.audio_file.url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+                        <a href="{% url 'delete_voice_note' note.pk voice_note.id %}" 
+                           onclick="return confirm('Delete this voice note?')"
+                           class="ml-4 text-red-600 hover:text-red-800 dark:text-red-400">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                    
+                    {% if voice_note.transcription %}
+                    <div class="bg-white dark:bg-gray-800 rounded p-3 mt-3">
+                        <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                            <i class="fas fa-file-alt mr-1"></i>Transcription:
+                        </p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ voice_note.transcription }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-12 text-gray-500 dark:text-gray-400">
+                <i class="fas fa-microphone-slash text-6xl mb-4"></i>
+                <p class="text-lg">No voice notes yet</p>
+                <p class="text-sm">Record or upload your first voice note above</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="mt-6">
+            <a href="{% url 'note_detail' note.pk %}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 inline-block">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Note
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+let mediaRecorder;
+let audioChunks = [];
+let recordingInterval;
+let recordingSeconds = 0;
+
+async function startRecording() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        
+        mediaRecorder.ondataavailable = (event) => {
+            audioChunks.push(event.data);
+        };
+        
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            
+            document.getElementById('audio-player').src = audioUrl;
+            document.getElementById('audio-preview').classList.remove('hidden');
+            
+            // Stop all tracks
+            stream.getTracks().forEach(track => track.stop());
+        };
+        
+        mediaRecorder.start();
+        audioChunks = [];
+        recordingSeconds = 0;
+        
+        // Update UI
+        document.getElementById('start-recording').disabled = true;
+        document.getElementById('start-recording').classList.add('bg-gray-400', 'cursor-not-allowed');
+        document.getElementById('start-recording').classList.remove('bg-red-600', 'hover:bg-red-700');
+        
+        document.getElementById('stop-recording').disabled = false;
+        document.getElementById('stop-recording').classList.remove('bg-gray-400', 'cursor-not-allowed');
+        document.getElementById('stop-recording').classList.add('bg-red-600', 'hover:bg-red-700');
+        
+        document.getElementById('recording-time').classList.remove('hidden');
+        document.getElementById('audio-preview').classList.add('hidden');
+        
+        // Start timer
+        recordingInterval = setInterval(() => {
+            recordingSeconds++;
+            const minutes = Math.floor(recordingSeconds / 60).toString().padStart(2, '0');
+            const seconds = (recordingSeconds % 60).toString().padStart(2, '0');
+            document.getElementById('recording-time').textContent = `${minutes}:${seconds}`;
+        }, 1000);
+        
+    } catch (error) {
+        console.error('Error accessing microphone:', error);
+        alert('Could not access microphone. Please check permissions.');
+    }
+}
+
+function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+        clearInterval(recordingInterval);
+        
+        // Update UI
+        document.getElementById('start-recording').disabled = false;
+        document.getElementById('start-recording').classList.remove('bg-gray-400', 'cursor-not-allowed');
+        document.getElementById('start-recording').classList.add('bg-red-600', 'hover:bg-red-700');
+        
+        document.getElementById('stop-recording').disabled = true;
+        document.getElementById('stop-recording').classList.add('bg-gray-400', 'cursor-not-allowed');
+        document.getElementById('stop-recording').classList.remove('bg-red-600', 'hover:bg-red-700');
+        
+        document.getElementById('recording-time').classList.add('hidden');
+    }
+}
+
+async function uploadRecording() {
+    const audioPlayer = document.getElementById('audio-player');
+    const audioUrl = audioPlayer.src;
+    
+    if (!audioUrl) return;
+    
+    // Convert blob URL to blob
+    const response = await fetch(audioUrl);
+    const blob = await response.blob();
+    
+    // Create form data
+    const formData = new FormData();
+    formData.append('audio_file', blob, 'recording.webm');
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    
+    // Upload
+    try {
+        const uploadResponse = await fetch(window.location.href, {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (uploadResponse.ok) {
+            window.location.reload();
+        } else {
+            alert('Upload failed. Please try again.');
+        }
+    } catch (error) {
+        console.error('Upload error:', error);
+        alert('Upload failed. Please try again.');
+    }
+}
+</script>
+{% endblock %}
