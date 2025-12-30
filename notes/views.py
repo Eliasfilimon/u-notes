@@ -14,7 +14,7 @@ from .forms import NoteForm, CourseForm, TopicForm, UserUpdateForm, DocumentForm
 from django.db import models
 from django.conf import settings
 from django.contrib import messages
-import openai
+import google.generativeai as genai
 import re
 from bs4 import BeautifulSoup
 from reportlab.lib.pagesizes import letter
@@ -268,6 +268,58 @@ def strip_html(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
     return soup.get_text()
 
+def use_gemini_summarization(content):
+    """Use Google Gemini for smart summarization"""
+    try:
+        if not settings.GEMINI_API_KEY:
+            return None
+        
+        genai.configure(api_key=settings.GEMINI_API_KEY)
+        model = genai.GenerativeModel('gemini-pro')
+        
+        prompt = f"""Please summarize the following note content in 2-3 bullet points. 
+Be concise and highlight the main ideas:
+
+{content[:2000]}"""  # Limit to 2000 chars to stay within free tier limits
+        
+        response = model.generate_content(prompt)
+        return response.text
+    except Exception as e:
+        print(f"Gemini API Error: {str(e)}")
+        return None
+
+def use_gemini_flashcards(content):
+    """Use Google Gemini to generate flashcards"""
+    try:
+        if not settings.GEMINI_API_KEY:
+            return None
+        
+        genai.configure(api_key=settings.GEMINI_API_KEY)
+        model = genai.GenerativeModel('gemini-pro')
+        
+        prompt = f"""Create 5 flashcard Q&A pairs from this content. 
+Return as JSON array with 'question' and 'answer' keys:
+
+{content[:2000]}"""
+        
+        response = model.generate_content(prompt)
+        try:
+            # Extract JSON from response
+            import json as json_module
+            json_str = response.text
+            if '```json' in json_str:
+                json_str = json_str.split('```json')[1].split('```')[0]
+            elif '```' in json_str:
+                json_str = json_str.split('```')[1].split('```')[0]
+            
+            flashcards = json_module.loads(json_str)
+            return flashcards if isinstance(flashcards, list) else None
+        except:
+            return None
+    except Exception as e:
+        print(f"Gemini API Error: {str(e)}")
+        return None
+
 @login_required
 def note_summarize(request, pk):
     note = get_object_or_404(Note, pk=pk, owner=request.user)
@@ -278,24 +330,28 @@ def note_summarize(request, pk):
             # Strip HTML from content
             plain_content = strip_html(note.content)
             
-            # Use free rule-based summarization (no API key needed)
-            sentences = [s.strip() for s in plain_content.split('.') if len(s.strip()) > 20]
+            # Try Gemini API first (if API key available)
+            summary = use_gemini_summarization(plain_content)
             
-            # Get key sentences
-            summary_sentences = []
-            
-            # Add first sentence
-            if sentences:
-                summary_sentences.append(sentences[0])
-            
-            # Add longest sentences (likely most important)
-            sorted_by_length = sorted(sentences[1:], key=len, reverse=True)
-            for sent in sorted_by_length[:2]:
-                if sent not in summary_sentences:
-                    summary_sentences.append(sent)
-            
-            # Format as bullet points
-            summary = "• " + "\n• ".join(summary_sentences) if summary_sentences else "No content to summarize"
+            # Fallback to rule-based summarization if API fails or not configured
+            if not summary:
+                sentences = [s.strip() for s in plain_content.split('.') if len(s.strip()) > 20]
+                
+                # Get key sentences
+                summary_sentences = []
+                
+                # Add first sentence
+                if sentences:
+                    summary_sentences.append(sentences[0])
+                
+                # Add longest sentences (likely most important)
+                sorted_by_length = sorted(sentences[1:], key=len, reverse=True)
+                for sent in sorted_by_length[:2]:
+                    if sent not in summary_sentences:
+                        summary_sentences.append(sent)
+                
+                # Format as bullet points
+                summary = "• " + "\n• ".join(summary_sentences) if summary_sentences else "No content to summarize"
             
             # Track activity
             UserActivity.objects.create(
@@ -321,34 +377,55 @@ def generate_flashcards(request, pk):
             # Strip HTML from content
             plain_content = strip_html(note.content)
             
-            # Use free rule-based flashcard generation (no API key needed)
-            sentences = [s.strip() for s in plain_content.split('.') if len(s.strip()) > 10]
-            
-            # Generate flashcards from sentences
             flashcard_pairs = []
-            for i, sentence in enumerate(sentences[:5]):  # Create max 5 flashcards
-                # Extract first few words as the subject for the question
-                words = sentence.split()[:5]
-                subject = ' '.join(words)
+            
+            # Try Gemini API first (if API key available)
+            gemini_cards = use_gemini_flashcards(plain_content)
+            
+            if gemini_cards:
+                # Create flashcards from Gemini response
+                for card in gemini_cards:
+                    if 'question' in card and 'answer' in card:
+                        existing = Flashcard.objects.filter(
+                            note=note,
+                            question=card['question'],
+                            answer=card['answer']
+                        ).first()
+                        
+                        if not existing:
+                            flashcard = Flashcard.objects.create(
+                                note=note,
+                                question=card['question'],
+                                answer=card['answer']
+                            )
+                            flashcard_pairs.append(flashcard)
+            else:
+                # Fallback: Use rule-based flashcard generation
+                sentences = [s.strip() for s in plain_content.split('.') if len(s.strip()) > 10]
                 
-                # Create simple Q&A
-                question = f"What is {subject}?"
-                answer = sentence.strip()
-                
-                # Check if flashcard already exists to avoid duplicates
-                existing = Flashcard.objects.filter(
-                    note=note,
-                    question=question,
-                    answer=answer
-                ).first()
-                
-                if not existing:
-                    flashcard = Flashcard.objects.create(
+                for i, sentence in enumerate(sentences[:5]):  # Create max 5 flashcards
+                    # Extract first few words as the subject for the question
+                    words = sentence.split()[:5]
+                    subject = ' '.join(words)
+                    
+                    # Create simple Q&A
+                    question = f"What is {subject}?"
+                    answer = sentence.strip()
+                    
+                    # Check if flashcard already exists to avoid duplicates
+                    existing = Flashcard.objects.filter(
                         note=note,
                         question=question,
                         answer=answer
-                    )
-                    flashcard_pairs.append(flashcard)
+                    ).first()
+                    
+                    if not existing:
+                        flashcard = Flashcard.objects.create(
+                            note=note,
+                            question=question,
+                            answer=answer
+                        )
+                        flashcard_pairs.append(flashcard)
             
             if flashcard_pairs:
                 success_message = f"Generated {len(flashcard_pairs)} flashcards successfully!"

@@ -174,8 +174,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
 ]
 
-# OpenAI API Key
-OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '')
+# Google Gemini API Key (Free tier available)
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
 
 # Production security settings (enabled when not DEBUG)
 if not DEBUG:
