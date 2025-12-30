@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: u-notes
+    name: unotes-web
     runtime: python
     pythonVersion: 3.12.7
     buildCommand: "pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput"
@@ -12,9 +12,9 @@ services:
       - key: DJANGO_DEBUG
         value: "False"
       - key: DJANGO_ALLOWED_HOSTS
-        value: "*"
+        value: "u-notes.onrender.com"
       - key: DJANGO_CSRF_TRUSTED_ORIGINS
-        value: "https://*.onrender.com,https://*.yourdomain.com"
+        value: "https://u-notes.onrender.com"
       - key: DJANGO_SECURE_SSL_REDIRECT
         value: "True"
       - key: DJANGO_SESSION_COOKIE_SECURE
