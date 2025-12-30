@@ -1,24 +1,24 @@
 {% extends 'notes/base.html' %}
 
 {% block content %}
-<div class="bg-white dark:bg-gray-900 w-full">
+<div class="bg-white dark:bg-slate-900 w-full">
     <!-- Hero Section -->
     <div class="relative w-full overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 opacity-95"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-700 to-secondary-600 opacity-95"></div>
         <div class="relative w-full px-4 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-32 lg:py-40">
             <div class="max-w-4xl mx-auto text-center">
-                <h1 class="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 sm:mb-6 leading-tight">
-                    Welcome to <span class="text-blue-200">U-Notes</span>
+                <h1 class="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 sm:mb-6 leading-tight drop-shadow-lg">
+                    Welcome to <span class="text-accent-300">U-Notes</span>
                 </h1>
-                <p class="text-base sm:text-lg md:text-xl lg:text-2xl text-blue-100 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-2">
+                <p class="text-base sm:text-lg md:text-xl lg:text-2xl text-primary-100 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-2 drop-shadow">
                     The ultimate note-taking platform for <span class="font-bold text-white">Tanzanian university</span> students. Organize, search, and access your study materials anytime, anywhere.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-2">
-                    <a href="{% url 'signup' %}" class="w-full sm:w-auto bg-white text-blue-700 px-6 sm:px-8 py-3 sm:py-4 rounded-lg shadow-xl hover:shadow-2xl hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 font-semibold sm:text-lg flex items-center justify-center sm:justify-start">
+                    <a href="{% url 'signup' %}" class="w-full sm:w-auto bg-white text-primary-700 px-6 sm:px-8 py-3 sm:py-4 rounded-lg shadow-2xl hover:shadow-3xl hover:bg-primary-50 transition-all duration-300 transform hover:scale-105 font-bold sm:text-lg flex items-center justify-center sm:justify-start">
                         <i class="fas fa-rocket mr-2"></i>
                         Get Started Free
                     </a>
-                    <a href="{% url 'login' %}" class="w-full sm:w-auto bg-transparent border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:bg-white hover:text-blue-700 transition-all duration-300 font-semibold sm:text-lg flex items-center justify-center sm:justify-start">
+                    <a href="{% url 'login' %}" class="w-full sm:w-auto bg-transparent border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:bg-white hover:text-primary-700 transition-all duration-300 font-bold sm:text-lg flex items-center justify-center sm:justify-start">
                         <i class="fas fa-sign-in-alt mr-2"></i>
                         Sign In
                     </a>
@@ -28,54 +28,54 @@
         <!-- Wave decoration -->
         <div class="absolute bottom-0 left-0 right-0 w-full">
             <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" preserveAspectRatio="none">
-                <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" class="fill-white dark:fill-gray-900"/>
+                <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" class="fill-white dark:fill-slate-900"/>
             </svg>
         </div>
     </div>
 
     <!-- Stats Section -->
-    <div class="w-full py-12 sm:py-16 md:py-20 bg-white dark:bg-gray-900">
+    <div class="w-full py-12 sm:py-16 md:py-20 bg-white dark:bg-slate-900">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 text-center">
-                <div class="p-4 sm:p-6">
-                    <div class="text-4xl sm:text-5xl font-extrabold text-blue-600 dark:text-blue-400 mb-2">10K+</div>
-                    <div class="text-gray-600 dark:text-gray-400 text-base sm:text-lg">Active Students</div>
+                <div class="p-4 sm:p-6 rounded-xl bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900 dark:to-primary-800 shadow-lg">
+                    <div class="text-4xl sm:text-5xl font-extrabold text-primary-600 dark:text-primary-300 mb-2">10K+</div>
+                    <div class="text-slate-600 dark:text-slate-300 text-base sm:text-lg font-semibold">Active Students</div>
                 </div>
-                <div class="p-4 sm:p-6">
-                    <div class="text-4xl sm:text-5xl font-extrabold text-blue-600 dark:text-blue-400 mb-2">50K+</div>
-                    <div class="text-gray-600 dark:text-gray-400 text-base sm:text-lg">Notes Created</div>
+                <div class="p-4 sm:p-6 rounded-xl bg-gradient-to-br from-secondary-50 to-secondary-100 dark:from-secondary-900 dark:to-secondary-800 shadow-lg">
+                    <div class="text-4xl sm:text-5xl font-extrabold text-secondary-600 dark:text-secondary-300 mb-2">50K+</div>
+                    <div class="text-slate-600 dark:text-slate-300 text-base sm:text-lg font-semibold">Notes Created</div>
                 </div>
-                <div class="p-4 sm:p-6">
-                    <div class="text-4xl sm:text-5xl font-extrabold text-blue-600 dark:text-blue-400 mb-2">99.9%</div>
-                    <div class="text-gray-600 dark:text-gray-400 text-base sm:text-lg">Uptime</div>
+                <div class="p-4 sm:p-6 rounded-xl bg-gradient-to-br from-accent-50 to-accent-100 dark:from-accent-900 dark:to-accent-800 shadow-lg">
+                    <div class="text-4xl sm:text-5xl font-extrabold text-accent-600 dark:text-accent-300 mb-2">99.9%</div>
+                    <div class="text-slate-600 dark:text-slate-300 text-base sm:text-lg font-semibold">Uptime</div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Features Section -->
-    <div class="w-full py-12 sm:py-16 md:py-20 bg-gray-50 dark:bg-gray-800">
+    <div class="w-full py-12 sm:py-16 md:py-20 bg-gradient-to-br from-slate-50 to-primary-50 dark:from-slate-800 dark:to-primary-900">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-10 sm:mb-16">
-                <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">Powerful Features for Smart Students</h2>
-                <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-2">Everything you need to succeed at university</p>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent mb-3 sm:mb-4">Powerful Features for Smart Students</h2>
+                <p class="text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto px-2">Everything you need to succeed at university</p>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                 <!-- Feature 1 -->
-                <div class="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                    <div class="flex items-center justify-center h-14 sm:h-16 w-14 sm:w-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white mx-auto mb-4 sm:mb-6 flex-shrink-0">
+                <div class="bg-white dark:bg-slate-700 p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-t-4 border-primary-500">
+                    <div class="flex items-center justify-center h-14 sm:h-16 w-14 sm:w-16 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white mx-auto mb-4 sm:mb-6 flex-shrink-0 shadow-lg">
                         <i class="fas fa-book-open text-xl sm:text-2xl"></i>
                     </div>
-                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3 text-center">Course Organization</h3>
-                    <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 text-center leading-relaxed">Organize notes by course codes and topics. Perfect structure for any university curriculum.</p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3 text-center">Course Organization</h3>
+                    <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 text-center leading-relaxed">Organize notes by course codes and topics. Perfect structure for any university curriculum.</p>
                 </div>
                 <!-- Feature 2 -->
-                <div class="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                    <div class="flex items-center justify-center h-14 sm:h-16 w-14 sm:w-16 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 text-white mx-auto mb-4 sm:mb-6 flex-shrink-0">
+                <div class="bg-white dark:bg-slate-700 p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-t-4 border-secondary-500">
+                    <div class="flex items-center justify-center h-14 sm:h-16 w-14 sm:w-16 rounded-full bg-gradient-to-br from-secondary-500 to-secondary-600 text-white mx-auto mb-4 sm:mb-6 flex-shrink-0 shadow-lg">
                         <i class="fas fa-search text-xl sm:text-2xl"></i>
                     </div>
-                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3 text-center">Smart Search</h3>
-                    <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 text-center leading-relaxed">Find any note instantly with powerful full-text search across all your content.</p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3 text-center">Smart Search</h3>
+                    <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 text-center leading-relaxed">Find any note instantly with powerful full-text search across all your content.</p>
                 </div>
                 <!-- Feature 3 -->
                 <div class="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
