@@ -4,7 +4,8 @@ services:
     runtime: python
     pythonVersion: 3.12.7
     buildCommand: "pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput"
-    startCommand: "gunicorn unotes_project.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --worker-class sync --timeout 120 --access-logfile -"
+    # Explicit gunicorn invocation to avoid truncated commands on Render
+    startCommand: "bash -c 'gunicorn unotes_project.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers ${WEB_CONCURRENCY:-4} --worker-class sync --timeout 120 --access-logfile -'"
     envVars:
       - key: DJANGO_SECRET_KEY
         generateValue: true
