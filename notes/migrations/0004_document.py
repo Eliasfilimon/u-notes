@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notes', '0003_note_tags'),
+        ('notes', '0002_alter_note_content'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 

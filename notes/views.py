@@ -11,7 +11,6 @@ import json
 from .models import Note, Course, Topic, Document, Flashcard, Comment, SharedNote, UserActivity, VoiceNote, StudySession
 from .forms import NoteForm, CourseForm, TopicForm, UserUpdateForm, DocumentForm
 from django.db import models
-from taggit.models import Tag
 from django.conf import settings
 from django.contrib import messages
 import openai
@@ -40,11 +39,10 @@ def signup(request):
     return render(request, 'notes/signup.html', {'form': form})
 
 @login_required
-def note_list(request, course_id=None, topic_id=None, tag_slug=None):
+def note_list(request, course_id=None, topic_id=None):
     notes = Note.objects.filter(owner=request.user).order_by('-updated_at')
     course = None
     topic = None
-    tag = None
 
     if course_id:
         course = get_object_or_404(Course, pk=course_id, owner=request.user)
@@ -54,11 +52,7 @@ def note_list(request, course_id=None, topic_id=None, tag_slug=None):
         topic = get_object_or_404(Topic, pk=topic_id, owner=request.user)
         notes = notes.filter(topic=topic)
 
-    if tag_slug:
-        tag = get_object_or_404(Tag, slug=tag_slug)
-        notes = notes.filter(tags__in=[tag])
-
-    return render(request, 'notes/note_list.html', {'notes': notes, 'course': course, 'topic': topic, 'tag': tag})
+    return render(request, 'notes/note_list.html', {'notes': notes, 'course': course, 'topic': topic})
 
 @login_required
 def note_detail(request, pk):
@@ -544,12 +538,6 @@ def export_note_pdf(request, pk):
     created_info = f"Created: {note.created_at.strftime('%B %d, %Y')} | Updated: {note.updated_at.strftime('%B %d, %Y')}"
     story.append(Paragraph(created_info, styles['Normal']))
     story.append(Spacer(1, 0.3 * inch))
-    
-    # Add tags
-    if note.tags.exists():
-        tags = ", ".join([tag.name for tag in note.tags.all()])
-        story.append(Paragraph(f"<b>Tags:</b> {tags}", styles['Normal']))
-        story.append(Spacer(1, 0.2 * inch))
     
     # Add content (strip HTML and convert to plain text)
     content = strip_html(note.content)

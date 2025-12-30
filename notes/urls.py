@@ -7,7 +7,6 @@ urlpatterns = [
     path('note/<int:pk>/', views.note_detail, name='note_detail'),
     path('course/<int:course_id>/', views.note_list, name='notes_by_course'),
     path('topic/<int:topic_id>/', views.note_list, name='notes_by_topic'),
-    path('tag/<slug:tag_slug>/', views.note_list, name='notes_by_tag'),
     path('note/create/', views.note_create, name='note_create'),
     path('note/<int:pk>/update/', views.note_update, name='note_update'),
     path('note/<int:pk>/delete/', views.note_delete, name='note_delete'),
