@@ -153,5 +153,3 @@ class TopicForm(forms.ModelForm):
             if char.lower() in name.lower():
                 raise ValidationError('Name contains invalid characters')
         return name
-            'course': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded-lg'}),
-        }
