@@ -24,7 +24,7 @@ import os
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-yhvh#u4z62=3c+!-(!3=e4$$vxbo^yywq#x4(tzv-86+wqwh#y')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ['1', 'true', 'yes']
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() in ['1', 'true', 'yes']
 
 # Comma-separated list, e.g. "example.com,api.example.com,127.0.0.1"
 ALLOWED_HOSTS = [h.strip() for h in os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0,testserver').split(',') if h.strip()]
