@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'notes',
     'ckeditor',
     'ckeditor_uploader',
-    'taggit',
 ]
 
 MIDDLEWARE = [
