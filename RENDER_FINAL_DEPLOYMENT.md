@@ -203,7 +203,7 @@ python-3.12.7
 - Media saves to `/var/data/media/`
 - Persists between redeploys
 
-### Issue: Can't Access Admin Panel
+### Issue: Can't Access Admin PanelPanelPanelPanelPanel
 
 **Fix:**
 1. Check `DJANGO_ALLOWED_HOSTS` is set

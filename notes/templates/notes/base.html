@@ -39,100 +39,117 @@
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans" @dark-mode-changed.window="updateTheme()">
-    <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 shadow-md">
+    <nav x-data="{ mobileMenuOpen: false }" class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <a href="{% url 'home' %}" class="text-2xl font-bold text-blue-600 dark:text-blue-400">U-Notes</a>
-                    <div class="hidden md:block">
+                <div class="flex items-center flex-1">
+                    <a href="{% url 'home' %}" class="text-2xl font-bold text-blue-600 dark:text-blue-400 flex-shrink-0">U-Notes</a>
+                    <div class="hidden md:block flex-1">
                         <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="{% url 'note_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">My Notes</a>
-                            <a href="{% url 'shared_notes_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
+                            <a href="{% url 'note_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">My Notes</a>
+                            <a href="{% url 'shared_notes_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                                 <i class="fas fa-share-alt mr-1"></i>Shared
                             </a>
-                            <a href="{% url 'analytics_dashboard' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
+                            <a href="{% url 'analytics_dashboard' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                                 <i class="fas fa-chart-line mr-1"></i>Analytics
                             </a>
-                            <a href="{% url 'document_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">Documents</a>
-                            <a href="{% url 'course_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">Courses</a>
-                            <a href="{% url 'topic_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">Topics</a>
+                            <a href="{% url 'document_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">Documents</a>
+                            <a href="{% url 'course_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">Courses</a>
+                            <a href="{% url 'topic_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">Topics</a>
                         </div>
                     </div>
                 </div>
-                <div class="hidden md:flex items-center">
-                    <a href="{% url 'note_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mx-4">
+                <div class="hidden md:flex items-center gap-4 flex-shrink-0">
+                    <a href="{% url 'note_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors whitespace-nowrap">
                         <i class="fas fa-plus mr-2"></i>New Note
                     </a>
-                    <form action="{% url 'search_results' %}" method="get" class="relative mx-4">
-                        <input type="text" name="q" class="w-full bg-gray-100 dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded-full py-2 px-4 leading-tight focus:outline-none focus:bg-white dark:focus:bg-gray-600 focus:border-blue-500" placeholder="Search notes...">
-                        <div class="absolute right-0 top-0 mt-3 mr-4">
-                            <button type="submit">
-                                <i class="fas fa-search text-gray-400"></i>
-                            </button>
-                        </div>
+                    <form action="{% url 'search_results' %}" method="get" class="relative">
+                        <input type="text" name="q" class="w-48 bg-gray-100 dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded-full py-2 px-4 leading-tight focus:outline-none focus:bg-white dark:focus:bg-gray-600 focus:border-blue-500 text-sm" placeholder="Search notes...">
+                        <button type="submit" class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </form>
-                    <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open" class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none">
+                    <div class="relative" x-data="{ userMenuOpen: false }">
+                        <button @click="userMenuOpen = !userMenuOpen" class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none transition-colors">
                             <i class="fas fa-user-circle fa-lg"></i>
                         </button>
-                        <div x-show="open" @click.away="open = false" x-cloak class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 z-50">
-                            <a href="{% url 'profile' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Your Profile</a>
+                        <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-cloak class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 z-50">
+                            <a href="{% url 'profile' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">Your Profile</a>
                             <form method="post" action="{% url 'logout' %}">
                                 {% csrf_token %}
-                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Logout</button>
+                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">Logout</button>
                             </form>
                         </div>
                     </div>
-                    <div class="ml-4">
-                        <button @click="darkMode = (darkMode === 'dark' ? 'light' : 'dark')" class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none transition-colors duration-200">
-                            <i class="fas fa-sun" x-show="darkMode === 'dark'" x-cloak></i>
-                            <i class="fas fa-moon" x-show="darkMode !== 'dark'" x-cloak></i>
-                        </button>
-                    </div>
+                    <button @click="darkMode = (darkMode === 'dark' ? 'light' : 'dark')" class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none transition-colors duration-200">
+                        <i class="fas fa-sun" x-show="darkMode === 'dark'" x-cloak></i>
+                        <i class="fas fa-moon" x-show="darkMode !== 'dark'" x-cloak></i>
+                    </button>
                 </div>
-                <div class="-mr-2 flex md:hidden">
-                    <button @click="open = !open" class="bg-gray-200 dark:bg-gray-700 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                <div class="md:hidden flex items-center gap-2">
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-colors">
                         <span class="sr-only">Open main menu</span>
-                        <svg :class="{'hidden': open, 'block': !open }" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <svg x-show="!mobileMenuOpen" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
-                        <svg :class="{'hidden': !open, 'block': open }" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <svg x-show="mobileMenuOpen" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
+                    </button>
+                    <button @click="darkMode = (darkMode === 'dark' ? 'light' : 'dark')" class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none transition-colors">
+                        <i class="fas fa-sun text-lg" x-show="darkMode === 'dark'" x-cloak></i>
+                        <i class="fas fa-moon text-lg" x-show="darkMode !== 'dark'" x-cloak></i>
                     </button>
                 </div>
             </div>
         </div>
 
-        <div :class="{'block': open, 'hidden': !open}" class="md:hidden">
+        <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="md:hidden origin-top-right absolute left-0 right-0 mt-0 shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5" x-cloak>
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="{% url 'note_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">My Notes</a>
-                <a href="{% url 'document_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">Documents</a>
-                <a href="{% url 'course_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">Courses</a>
-                <a href="{% url 'topic_list' %}" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">Topics</a>
+                <a href="{% url 'note_list' %}" @click="mobileMenuOpen = false" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium transition-colors">My Notes</a>
+                <a href="{% url 'shared_notes_list' %}" @click="mobileMenuOpen = false" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium transition-colors">
+                    <i class="fas fa-share-alt mr-1"></i>Shared
+                </a>
+                <a href="{% url 'analytics_dashboard' %}" @click="mobileMenuOpen = false" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium transition-colors">
+                    <i class="fas fa-chart-line mr-1"></i>Analytics
+                </a>
+                <a href="{% url 'document_list' %}" @click="mobileMenuOpen = false" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium transition-colors">Documents</a>
+                <a href="{% url 'course_list' %}" @click="mobileMenuOpen = false" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium transition-colors">Courses</a>
+                <a href="{% url 'topic_list' %}" @click="mobileMenuOpen = false" class="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium transition-colors">Topics</a>
+                <a href="{% url 'note_create' %}" @click="mobileMenuOpen = false" class="bg-blue-500 text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-600 transition-colors mt-2">
+                    <i class="fas fa-plus mr-2"></i>New Note
+                </a>
+            </div>
+            <div class="px-2 pt-2 pb-3 border-t border-gray-200 dark:border-gray-700">
+                <form action="{% url 'search_results' %}" method="get" class="relative px-3 py-2 mb-3">
+                    <input type="text" name="q" class="w-full bg-gray-100 dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded-lg py-2 px-4 leading-tight focus:outline-none focus:bg-white dark:focus:bg-gray-600 focus:border-blue-500 text-sm" placeholder="Search notes...">
+                    <button type="submit" class="absolute right-5 top-3.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
             </div>
             <div class="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
                 <div class="flex items-center px-5">
                     <div class="flex-shrink-0">
                         <i class="fas fa-user-circle fa-lg text-gray-500 dark:text-gray-400"></i>
                     </div>
-                    <div class="ml-3">
-                        <div class="text-base font-medium leading-none text-gray-800 dark:text-white">{{ user.username }}</div>
-                        <div class="text-sm font-medium leading-none text-gray-500 dark:text-gray-400">{{ user.email }}</div>
+                    <div class="ml-3 flex-1">
+                        <div class="text-base font-medium leading-none text-gray-800 dark:text-white truncate">{{ user.username }}</div>
+                        <div class="text-sm font-medium leading-none text-gray-500 dark:text-gray-400 truncate">{{ user.email }}</div>
                     </div>
                 </div>
                 <div class="mt-3 px-2 space-y-1">
-                    <a href="{% url 'profile' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">Your Profile</a>
+                    <a href="{% url 'profile' %}" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">Your Profile</a>
                     <form method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
-                        <button type="submit" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">Logout</button>
+                        <button type="submit" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">Logout</button>
                     </form>
                 </div>
             </div>
         </div>
     </nav>
-    <main class="py-10">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <main class="min-h-screen">
+        <div class="w-full">
             {% block content %}{% endblock %}
         </div>
     </main>
